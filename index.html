@@ -228,6 +228,15 @@ textarea { resize: vertical; min-height: 84px; }
 .radios label:has(input:checked) { border-color: var(--ok); background: var(--ok-soft); }
 .radios input { margin-top: 4px; }
 
+/* AI answer panel */
+.ai { display: grid; gap: 12px; border-color: var(--accent); background: var(--accent-soft); }
+.ai-head { display: flex; gap: 12px; align-items: flex-start; }
+.ai-head > div { display: grid; gap: 2px; min-width: 0; }
+.ai-head p { margin: 0; font-size: .9rem; }
+.ai-badge { flex: none; font-family: var(--f-mono); font-size: .72rem; font-weight: 600; letter-spacing: .08em; background: var(--accent); color: var(--accent-ink); border-radius: 6px; padding: 4px 7px; }
+.ai-out { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 12px 14px; line-height: 1.6; max-width: 72ch; }
+.ai-out.thinking { color: var(--muted); font-style: italic; }
+.ai-note { font-size: .84rem; color: var(--muted); margin: 0; }
 .toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 30; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 700; box-shadow: var(--shadow); max-width: calc(100% - 32px); }
 
 @media (max-width: 720px) {
@@ -273,6 +282,7 @@ textarea { resize: vertical; min-height: 84px; }
       </div>
       <div class="stats" id="stats"></div>
     </div>
+    <div class="card ai" id="aiBrowse" hidden aria-live="polite"></div>
     <div id="provenSec" class="stack" hidden>
       <div class="sec-h"><h2>Most proven fixes</h2><span class="muted">Highest confirmed success across all problems</span></div>
       <div class="proven-grid" id="provenGrid"></div>
@@ -342,6 +352,7 @@ textarea { resize: vertical; min-height: 84px; }
       <div class="sec-h"><h2 id="solTitle">Fixes</h2><span class="muted">Ranked by reported outcomes, not votes</span></div>
       <div class="list" id="pSols"></div>
     </div>
+    <div class="card ai" id="aiProblem" hidden aria-live="polite"></div>
     <form class="card stack" id="solForm" novalidate>
       <h2 style="font-size:1.2rem">Share what you did</h2>
       <div class="field">
@@ -511,7 +522,7 @@ function search(q) {
       sc += best;
     }
     const r = Math.min(1, sc / maxScore);
-    if (r > 0.12) rel.set(d.pid, r);
+    if (r > 0.3) rel.set(d.pid, r);
   }
   return { rel, terms };
 }
@@ -627,6 +638,7 @@ function outcomeBar(st, compact) {
 /* ---------- navigation ---------- */
 function go(view, pid, opts = {}) {
   if (view !== S.view || pid !== S.pid) S.prevView = S.view === "problem" ? S.prevView : S.view;
+  if (view !== S.view || pid !== S.pid) { aiHide($("#aiBrowse")); aiHide($("#aiProblem")); }
   S.view = view; S.pid = pid || null;
   for (const v of ["browse", "post", "problem", "following"]) $("#v-" + v).hidden = v !== view;
   $$("[data-nav]").forEach(b => b.dataset.nav === view ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
@@ -746,6 +758,8 @@ function renderBrowse() {
     stat(S.problems.size, "problem", "problems"), stat(D.solCount, "fix", "fixes"),
     stat(D.reports, "outcome report", "outcome reports"), stat(D.proven, "proven fix", "proven fixes"));
 
+  if (q.length >= 6) setupAi($("#aiBrowse"), "q:" + q.toLowerCase(), q, "browse"); else aiHide($("#aiBrowse"));
+
   // proven strip (only without a query)
   const proven = [];
   for (const [pid, list] of D.solsByProb) for (const s of list) { const st = D.stats.get(s.id); if (st.n >= 2 && st.rate >= 0.6) proven.push({ pid, s, st }); }
@@ -818,7 +832,7 @@ function renderProblem() {
   if (!p) {
     rc(head, h("div", { class: "empty" }, h("h3", null, loadingNow() ? "Loading…" : "This problem isn't here anymore"),
       loadingNow() ? null : h("p", null, "It may have been deleted by the person who posted it.")));
-    rc(solsBox, ); $("#solForm").hidden = true; $("#solTitle").parentElement.hidden = true; return;
+    rc(solsBox, ); $("#solForm").hidden = true; $("#solTitle").parentElement.hidden = true; aiHide($("#aiProblem")); return;
   }
   $("#solTitle").parentElement.hidden = false;
   const D = S.D, st = probStatus(pid), sols = D.solsByProb.get(pid) || [], mine = p.authorId === S.uid;
@@ -889,6 +903,7 @@ function renderProblem() {
             btn("worked", "Worked"), btn("partial", "Partly"), btn("failed", "Didn't work"))));
     }));
   }
+  setupAi($("#aiProblem"), "p:" + pid, [str(p.title, 140), p.details ? "Details: " + str(p.details, 1500) : "", p.tried ? "Already tried: " + str(p.tried, 800) : ""].filter(Boolean).join("\n"), "problem");
   $("#solForm").hidden = false;
   for (const el of $$("#solForm input, #solForm textarea, #solForm button")) el.disabled = !S.canWrite;
 }
@@ -983,6 +998,91 @@ async function deleteProblem(pid) {
 
 let toastT = 0;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3200); }
+
+/* ---------- AI answers (Claude, on the viewer's own account) ---------- */
+const AI = { sample: null, state: "unknown", ctl: null };
+function aiContext(pids) {
+  const lines = [];
+  for (const pid of pids.slice(0, 3)) {
+    const p = S.problems.get(pid); if (!p) continue;
+    lines.push("Problem: " + str(p.title, 140));
+    for (const s of (S.D.solsByProb.get(pid) || []).slice(0, 4)) {
+      const st = S.D.stats.get(s.id);
+      const rep = st.n ? `worked ${st.worked}, partly ${st.partial}, didn't ${st.failed} (${Math.round(st.rate * 100)}% success of ${st.n})` : "none yet";
+      lines.push(`  - Fix: ${str(s.summary, 160)}${s.details ? " (" + str(s.details, 240) + ")" : ""}. Reports: ${rep}.`);
+    }
+  }
+  return lines.join("\n");
+}
+function aiPrompt(kind, question, pids) {
+  const ctx = aiContext(pids);
+  const base = kind === "problem"
+    ? `Someone posted this problem on "What Worked", a community site where fixes are ranked by how many people say they actually worked.\n\n${question}\n\nFixes already posted, with real outcome reports:\n${ctx || "(none yet)"}\n\nSuggest what else they could try. Don't repeat what they already tried. If a posted fix has a strong track record, say so first and quote its numbers.`
+    : `You answer everyday problems for "What Worked", a community site where fixes are ranked by how many people say they actually worked.\n\nThe person's problem: "${question}"\n\n` +
+      (ctx ? `Related community data (fixes with real outcome reports). Use these when they fit, and quote their numbers like "worked for 7 of 7 people":\n${ctx}` : "No one in the community has posted this problem yet.");
+  return base + `\n\nWrite a practical answer:\n- One opening sentence with the most likely cause or best first move.\n- Then 3 to 6 numbered steps, most likely to work first. Tag any step taken from the community data with "(community: worked for X of N)".\n- If it could be a health, safety, legal or money risk, end with one line on when to get professional help.\nPlain text only: no markdown, no bold, no headings. Under 220 words.`;
+}
+const AI_ERR = {
+  rate_limited: "Too many questions right now. Try again in a bit.",
+  session_expired: "Sign in to Claude again to get AI answers.",
+  refused: "Claude couldn't answer that one. Try rewording it.",
+  empty_completion: "No answer came back. Try rewording it.",
+  prompt_too_large: "That's too long to send. Shorten it and try again.",
+};
+const AI_OFF = new Set(["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"]);
+const clean = t => String(t || "").replace(/\*\*/g, "");
+function aiStop() { if (AI.ctl) { AI.ctl.abort(); AI.ctl = null; } }
+function aiHide(box) { if (box.dataset.key) aiStop(); box.hidden = true; box.dataset.key = ""; }
+function setupAi(box, key, question, kind) {
+  if (AI.state === "unknown" || AI.state === "off") { box.hidden = true; return; }
+  if (box.dataset.key === key) return;
+  aiStop();
+  box.dataset.key = key; box.hidden = false;
+  const title = kind === "problem" ? "Get AI suggestions for this problem" : "Get an instant AI answer";
+  const sub = kind === "problem" ? "Claude reads the details and the fixes above, then suggests what else to try."
+    : "Claude answers right away and uses the community's proven fixes when they fit.";
+  const head = text => h("div", { class: "ai-head" }, h("span", { class: "ai-badge" }, "AI"), h("div", null, h("b", null, title), h("p", { class: "muted" }, text)));
+  if (AI.state === "local") { rc(box, head("Instant AI answers work in the full app, for people signed in to Claude.")); return; }
+  const out = h("div", { class: "ai-out", hidden: true });
+  const note = h("p", { class: "ai-note", hidden: true });
+  const ask = h("button", { class: "btn primary sm", type: "button" }, "Ask Claude");
+  const stop = h("button", { class: "btn sm", type: "button", hidden: true }, "Stop");
+  const after = h("div", { class: "actions", hidden: true });
+  const run = async fresh => {
+    aiStop();
+    const ctl = AI.ctl = new AbortController();
+    const res = kind === "problem" ? null : search(question);
+    const pids = kind === "problem" ? [S.pid] : res ? [...res.rel.entries()].sort((a, b) => b[1] - a[1]).map(e => e[0]) : [];
+    ask.hidden = true; stop.hidden = false; after.hidden = true; note.hidden = true;
+    out.hidden = false; out.classList.add("thinking"); out.textContent = "Thinking…";
+    let got = false;
+    try {
+      const opts = { signal: ctl.signal, onText: ({ text }) => { got = true; out.classList.remove("thinking"); out.textContent = clean(text); } };
+      if (fresh) opts.cache = false;
+      const { truncated } = await AI.sample(aiPrompt(kind, question, pids), opts);
+      note.textContent = (truncated ? "The answer was cut short. " : "") + "AI suggestion, not yet tested by people here. Check the ranked fixes too.";
+      note.hidden = false;
+    } catch (e) {
+      const code = e && e.code;
+      out.classList.remove("thinking");
+      if (AI_OFF.has(code)) { AI.state = "off"; aiHide($("#aiBrowse")); aiHide($("#aiProblem")); toast("AI answers aren't available for you here."); return; }
+      if (e && e.text) out.textContent = clean(e.text); else out.hidden = true;
+      if (code === "refused") out.hidden = true;
+      if (code !== "cancelled") { note.textContent = AI_ERR[code] || "Something went wrong. Try again."; note.hidden = false; }
+    } finally {
+      if (AI.ctl === ctl) AI.ctl = null;
+      stop.hidden = true; after.hidden = false;
+    }
+  };
+  ask.addEventListener("click", () => run(false));
+  stop.addEventListener("click", aiStop);
+  rc(after,
+    kind === "problem"
+      ? h("button", { class: "btn sm", type: "button", disabled: !S.canWrite || null, onclick: () => { $("#solForm").scrollIntoView({ block: "start" }); setTimeout(() => $("#sSummary").focus(), 300); } }, "Tried one? Share it as a fix")
+      : h("button", { class: "btn sm primary", type: "button", onclick: () => startPost(question) }, "Post this problem so people can share what worked"),
+    h("button", { class: "btn sm ghost", type: "button", onclick: () => run(true) }, "Ask again"));
+  rc(box, head(sub), out, note, h("div", { class: "actions" }, ask, stop), after);
+}
 
 /* ---------- static wiring ---------- */
 $("#brand").addEventListener("click", () => go("browse"));
@@ -1080,10 +1180,11 @@ async function boot() {
   const api = await getClaude();
   if (api) {
     S.mode = "live";
+    api.use("sample").then(sm => { AI.sample = sm; AI.state = sm ? "ready" : "off"; render(); }, () => { AI.state = "off"; });
     [S.db, S.user] = await Promise.all([api.use("db"), api.use("user")]);
   } else {
     S.mode = "local";
-    const m = localStore(); S.db = m.db; S.user = m.user;
+    const m = localStore(); S.db = m.db; S.user = m.user; AI.state = "local";
   }
   if (S.user) {
     try { S.uid = await S.user.id(); } catch { S.uid = null; }
