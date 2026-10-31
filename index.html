@@ -1,0 +1,1118 @@
+<title>What Worked</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one calm reading column; a problem is a case file, fixes are ranked entries with an outcome bar as their signature. */
+:root {
+  --bg: #F3F5FA;
+  --surface: #FFFFFF;
+  --sunk: #E9EDF5;
+  --ink: #131A2C;
+  --muted: #586180;
+  --line: #D8DDEA;
+  --accent: #2443C4;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E3E8FB;
+  --ok: #1D8048;
+  --ok-soft: #DDF2E5;
+  --mid: #B07A0C;
+  --mid-soft: #F7ECD2;
+  --bad: #BE3535;
+  --bad-soft: #F8E0E0;
+  --shadow: 0 1px 2px rgba(19,26,44,.06), 0 6px 24px rgba(19,26,44,.06);
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1220; --surface: #161B2B; --sunk: #1D2336; --ink: #E7EAF4; --muted: #99A2BE; --line: #2A3149;
+    --accent: #8197FF; --accent-ink: #0E1220; --accent-soft: #232C52;
+    --ok: #4FC283; --ok-soft: #173426; --mid: #E2B24C; --mid-soft: #3A2F15; --bad: #F06E6E; --bad-soft: #3D1D21;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px rgba(0,0,0,.25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1220; --surface: #161B2B; --sunk: #1D2336; --ink: #E7EAF4; --muted: #99A2BE; --line: #2A3149;
+  --accent: #8197FF; --accent-ink: #0E1220; --accent-soft: #232C52;
+  --ok: #4FC283; --ok-soft: #173426; --mid: #E2B24C; --mid-soft: #3A2F15; --bad: #F06E6E; --bad-soft: #3D1D21;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px rgba(0,0,0,.25);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.55; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+a { color: var(--accent); }
+button, input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.15; letter-spacing: -0.01em; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.wrap { max-width: 880px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* Header */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--surface); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 9px; font-family: var(--f-display); font-weight: 800; font-size: 1.2rem; text-decoration: none; color: var(--ink); margin-right: auto; background: none; border: 0; padding: 0; cursor: pointer; }
+.brand svg { flex: none; }
+nav.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+nav.tabs button { border: 0; background: none; padding: 7px 12px; border-radius: 8px; cursor: pointer; color: var(--muted); font-weight: 700; display: inline-flex; gap: 6px; align-items: center; }
+nav.tabs button:hover { background: var(--sunk); color: var(--ink); }
+nav.tabs button[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+.badge { font-family: var(--f-mono); font-size: .72rem; background: var(--accent); color: var(--accent-ink); border-radius: 99px; padding: 1px 7px; }
+
+.banner { margin-top: 14px; padding: 10px 14px; border-radius: var(--r); background: var(--mid-soft); color: var(--ink); font-size: .93rem; border: 1px solid var(--line); }
+
+main { padding-block: 22px 80px; }
+section.view { display: grid; gap: 22px; }
+
+/* Hero search */
+.hero { display: grid; gap: 12px; padding-block: 18px 4px; }
+.hero h1 { font-size: clamp(2rem, 6vw, 3.1rem); font-weight: 800; }
+.hero p { margin: 0; max-width: 60ch; color: var(--muted); font-size: 1.05rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.chain b { color: var(--ink); font-weight: 600; background: var(--surface); border: 1px solid var(--line); padding: 3px 8px; border-radius: 6px; }
+.searchbox { position: relative; }
+.searchbox input { width: 100%; padding: 16px 16px 16px 48px; font-size: 1.1rem; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+.searchbox input:focus { border-color: var(--accent); outline: none; }
+.searchbox svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.stats { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .88rem; color: var(--muted); }
+.stats span b { color: var(--ink); font-family: var(--f-mono); font-weight: 600; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip { border: 1px solid var(--line); background: var(--surface); padding: 5px 12px; border-radius: 99px; cursor: pointer; font-size: .9rem; }
+.chip:hover { border-color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.controls .spacer { flex: 1; }
+select.sort { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 5px 8px; font-size: .9rem; }
+
+.sec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.sec-h h2 { font-size: 1.25rem; }
+.sec-h .muted { font-size: .9rem; }
+
+/* Problem cards */
+.list { display: grid; gap: 10px; }
+.pcard { display: grid; gap: 8px; text-align: left; width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; cursor: pointer; }
+.pcard:hover { border-color: var(--accent); }
+.pcard .row1 { display: flex; gap: 10px; align-items: flex-start; }
+.pcard h3 { font-size: 1.12rem; font-weight: 700; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.pcard mark, .similar mark, .hl { background: var(--accent-soft); color: inherit; border-radius: 3px; padding: 0 2px; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .85rem; color: var(--muted); align-items: center; }
+.tag { font-size: .78rem; background: var(--sunk); color: var(--muted); padding: 1px 8px; border-radius: 99px; border: 0; cursor: pointer; }
+.tag:hover { color: var(--ink); }
+.bestfix { display: grid; gap: 6px; background: var(--sunk); border-radius: 8px; padding: 8px 10px; font-size: .92rem; }
+.bestfix .lbl { font-family: var(--f-mono); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.bestfix .txt { overflow-wrap: anywhere; }
+
+.pill { flex: none; font-family: var(--f-mono); font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+.pill.solved, .pill.proven { background: var(--ok-soft); color: var(--ok); }
+.pill.promising { background: var(--accent-soft); color: var(--accent); }
+.pill.mixed { background: var(--mid-soft); color: var(--mid); }
+.pill.rarely { background: var(--bad-soft); color: var(--bad); }
+.pill.open, .pill.untested { background: var(--sunk); color: var(--muted); }
+
+/* Outcome bar — the signature */
+.obar { display: grid; gap: 5px; }
+.obar .track { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: var(--sunk); }
+.obar .track i { display: block; height: 100%; }
+.obar .w { background: var(--ok); } .obar .p { background: var(--mid); } .obar .f { background: var(--bad); }
+.obar .legend { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: .82rem; color: var(--muted); }
+.obar .legend b { font-family: var(--f-mono); font-weight: 600; color: var(--ink); }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; }
+
+/* Proven strip */
+.proven-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.fcard { display: grid; gap: 8px; align-content: start; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; cursor: pointer; }
+.fcard:hover { border-color: var(--ok); }
+.fcard .for { font-size: .82rem; color: var(--muted); overflow-wrap: anywhere; }
+.fcard .sum { font-weight: 700; overflow-wrap: anywhere; }
+.rate { font-family: var(--f-mono); font-weight: 600; font-size: 1.5rem; color: var(--ok); line-height: 1; }
+.rate small { font-size: .75rem; color: var(--muted); font-weight: 400; margin-left: 4px; }
+
+.empty { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--r); padding: 26px 20px; display: grid; gap: 10px; justify-items: start; }
+.empty h3 { font-size: 1.15rem; }
+.empty p { margin: 0; color: var(--muted); max-width: 58ch; }
+
+/* Buttons + forms */
+.btn { display: inline-flex; align-items: center; gap: 7px; border-radius: 9px; padding: 9px 15px; font-weight: 700; cursor: pointer; border: 1px solid var(--line); background: var(--surface); }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: none; border-color: transparent; color: var(--muted); }
+.btn.ghost:hover { color: var(--ink); background: var(--sunk); }
+.btn.danger { color: var(--bad); }
+.btn.sm { padding: 5px 10px; font-size: .88rem; border-radius: 7px; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; }
+form.stack, .stack { display: grid; gap: 14px; }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field label, .lab { font-weight: 700; font-size: .95rem; }
+.field .hint { font-size: .84rem; color: var(--muted); }
+.field input, .field textarea, .sheet textarea { width: 100%; border: 1.5px solid var(--line); border-radius: 9px; padding: 10px 12px; background: var(--bg); }
+.field input:focus, .field textarea:focus, .sheet textarea:focus { border-color: var(--accent); outline: none; }
+textarea { resize: vertical; min-height: 84px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.actions .spacer { flex: 1; }
+
+.post-layout { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.similar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 72px); display: grid; gap: 10px; }
+.similar .sim { display: grid; gap: 4px; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; cursor: pointer; }
+.similar .sim:hover { border-color: var(--accent); }
+.similar .sim b { overflow-wrap: anywhere; }
+.match { font-family: var(--f-mono); font-size: .72rem; color: var(--accent); }
+
+/* Outcome choice segmented control */
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { border: 1.5px solid var(--line); border-radius: 9px; padding: 7px 12px; cursor: pointer; font-weight: 700; font-size: .92rem; display: inline-flex; align-items: center; gap: 6px; background: var(--surface); }
+.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg input[value="worked"]:checked + label { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.seg input[value="partial"]:checked + label { border-color: var(--mid); background: var(--mid-soft); color: var(--mid); }
+.seg input[value="failed"]:checked + label { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+
+/* Problem page */
+.back { justify-self: start; }
+.casefile { display: grid; gap: 12px; }
+.casefile h1 { font-size: clamp(1.6rem, 4.5vw, 2.3rem); font-weight: 800; overflow-wrap: anywhere; }
+.casefile .body { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 68ch; margin: 0; }
+.tried { border-left: 3px solid var(--line); padding: 2px 0 2px 12px; display: grid; gap: 2px; }
+.tried .lab { font-family: var(--f-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 400; }
+.tried p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.solvedbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--ok-soft); color: var(--ok); border-radius: var(--r); padding: 10px 14px; font-weight: 700; }
+.solvedbar button { color: var(--ok); text-decoration: underline; background: none; border: 0; cursor: pointer; font-weight: 700; padding: 0; }
+
+.scard { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; scroll-margin-top: 90px; }
+.scard.accepted { border-color: var(--ok); box-shadow: 0 0 0 1px var(--ok) inset; }
+.scard .rank { font-family: var(--f-mono); font-weight: 600; font-size: 1.05rem; color: var(--muted); padding-top: 2px; }
+.scard .main { display: grid; gap: 10px; min-width: 0; }
+.scard .hd { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+.scard h3 { font-size: 1.12rem; flex: 1 1 260px; min-width: 0; overflow-wrap: anywhere; }
+.scard .body { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px; }
+.fact { font-size: .82rem; border: 1px solid var(--line); border-radius: 6px; padding: 1px 8px; color: var(--muted); }
+.fact b { color: var(--ink); font-weight: 700; }
+.report { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding-top: 4px; border-top: 1px solid var(--line); }
+.report .q { font-size: .88rem; color: var(--muted); margin-right: 4px; padding-top: 8px; }
+.report .btn { margin-top: 8px; }
+.report .btn.mine-worked { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.report .btn.mine-partial { background: var(--mid-soft); border-color: var(--mid); color: var(--mid); }
+.report .btn.mine-failed { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.notes { display: grid; gap: 8px; }
+.note { display: grid; gap: 2px; font-size: .92rem; padding-left: 10px; border-left: 3px solid var(--line); }
+.note.worked { border-left-color: var(--ok); } .note.partial { border-left-color: var(--mid); } .note.failed { border-left-color: var(--bad); }
+.note p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.note .meta { font-size: .8rem; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); cursor: pointer; font-weight: 700; font-size: .9rem; justify-self: start; }
+
+/* Following */
+.upd { display: grid; gap: 8px; }
+.upd .lines { display: grid; gap: 3px; font-size: .9rem; }
+.upd .lines span::before { content: "•"; color: var(--accent); margin-right: 8px; }
+
+/* Sheets */
+.sheet-wrap { position: fixed; inset: 0; z-index: 20; background: rgba(10,14,28,.45); display: grid; place-items: end center; padding: 16px max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+@media (min-width: 640px) { .sheet-wrap { place-items: center; } }
+.sheet { width: min(520px, 100%); background: var(--surface); border-radius: 14px; padding: 20px; display: grid; gap: 14px; box-shadow: var(--shadow); max-height: 90vh; overflow: auto; }
+.sheet h2 { font-size: 1.3rem; }
+.sheet p { margin: 0; }
+.radios { display: grid; gap: 8px; }
+.radios label { display: flex; gap: 10px; align-items: flex-start; border: 1.5px solid var(--line); border-radius: 9px; padding: 9px 12px; cursor: pointer; overflow-wrap: anywhere; }
+.radios label:has(input:checked) { border-color: var(--ok); background: var(--ok-soft); }
+.radios input { margin-top: 4px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 30; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 700; box-shadow: var(--shadow); max-width: calc(100% - 32px); }
+
+@media (max-width: 720px) {
+  .post-layout { grid-template-columns: 1fr; }
+  .similar { position: static; }
+  .two { grid-template-columns: 1fr; }
+  nav.tabs { width: 100%; }
+  nav.tabs button { flex: 1; justify-content: center; padding: 7px 6px; }
+  .scard { grid-template-columns: 1fr; }
+  .scard .rank { padding: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pcard, .fcard, .btn, .chip { transition: border-color .15s, background-color .15s; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <button class="brand" id="brand" type="button" aria-label="What Worked, go to search">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="7" fill="var(--accent)"/><path d="M7 13.5l4 4 8-9" fill="none" stroke="var(--accent-ink)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      What Worked
+    </button>
+    <nav class="tabs" aria-label="Main">
+      <button type="button" data-nav="browse">Search</button>
+      <button type="button" data-nav="post">Post a problem</button>
+      <button type="button" data-nav="following">Following <span class="badge" id="navBadge" hidden>0</span></button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap"><div class="banner" id="banner" hidden></div></div>
+
+<main class="wrap">
+  <!-- SEARCH -->
+  <section class="view" id="v-browse">
+    <div class="hero">
+      <div class="chain" aria-label="How it works"><b>Problem</b> → <b>Solutions</b> → <b>Outcomes</b></div>
+      <h1>What's going wrong?</h1>
+      <p>Describe it the way you'd tell a friend. Every fix here is ranked by how many people say it actually worked for them.</p>
+      <div class="searchbox">
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="q" type="search" autocomplete="off" placeholder="e.g. my toddler wakes up at 5am every morning" aria-label="Search problems">
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div id="provenSec" class="stack" hidden>
+      <div class="sec-h"><h2>Most proven fixes</h2><span class="muted">Highest confirmed success across all problems</span></div>
+      <div class="proven-grid" id="provenGrid"></div>
+    </div>
+    <div class="stack">
+      <div class="sec-h"><h2 id="listTitle">Problems</h2><span class="muted" id="listCount"></span></div>
+      <div class="controls">
+        <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" type="button" data-filter="proven">Has a fix that worked</button>
+        <button class="chip" type="button" data-filter="unanswered">No fixes yet</button>
+        <button class="chip" type="button" data-filter="open">Still open</button>
+        <span class="spacer"></span>
+        <label for="sort" class="muted" style="font-size:.88rem">Sort</label>
+        <select class="sort" id="sort">
+          <option value="match">Best match</option>
+          <option value="proven">Most proven</option>
+          <option value="new">Newest</option>
+        </select>
+      </div>
+      <div class="list" id="results"></div>
+    </div>
+  </section>
+
+  <!-- POST -->
+  <section class="view" id="v-post" hidden>
+    <div class="hero" style="padding-top:6px">
+      <h1>Describe the problem</h1>
+      <p>Start with one plain sentence. Matching problems appear as you type, so check them first: following an existing problem keeps its fixes and outcomes in one place.</p>
+    </div>
+    <div class="post-layout">
+      <form class="card stack" id="postForm" novalidate>
+        <div class="field">
+          <label for="pTitle">What's the problem?</label>
+          <input id="pTitle" maxlength="140" required placeholder="My dog barks at every noise outside at night">
+          <span class="hint">One sentence, as specific as you can.</span>
+        </div>
+        <div class="field">
+          <label for="pDetails">What's going on?</label>
+          <textarea id="pDetails" maxlength="2000" placeholder="When it started, how often, anything that seems to set it off…"></textarea>
+        </div>
+        <div class="field">
+          <label for="pTried">What have you already tried?</label>
+          <textarea id="pTried" maxlength="1000" placeholder="So people don't suggest what already failed"></textarea>
+        </div>
+        <div class="field">
+          <label for="pTags">Tags</label>
+          <input id="pTags" maxlength="120" placeholder="dogs, sleep, apartment">
+          <span class="hint">Comma separated. Optional.</span>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit" id="pSubmit">Post problem</button>
+          <span class="muted" id="pMsg" style="font-size:.9rem"></span>
+        </div>
+      </form>
+      <aside class="similar" aria-live="polite">
+        <div class="lab">Similar problems already here</div>
+        <div id="similar" class="stack" style="gap:8px"><p class="muted" style="margin:0;font-size:.92rem">Start typing and matches will show up here.</p></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="view" id="v-problem" hidden>
+    <button class="btn ghost sm back" type="button" id="backBtn">← Back</button>
+    <div id="pHead" class="casefile"></div>
+    <div class="stack">
+      <div class="sec-h"><h2 id="solTitle">Fixes</h2><span class="muted">Ranked by reported outcomes, not votes</span></div>
+      <div class="list" id="pSols"></div>
+    </div>
+    <form class="card stack" id="solForm" novalidate>
+      <h2 style="font-size:1.2rem">Share what you did</h2>
+      <div class="field">
+        <label for="sSummary">What fixed it?</label>
+        <input id="sSummary" maxlength="160" required placeholder="Ran a white-noise machine by the window">
+      </div>
+      <div class="field">
+        <label for="sDetails">How, exactly?</label>
+        <textarea id="sDetails" maxlength="2000" placeholder="Steps, products, settings, how long before it helped…"></textarea>
+      </div>
+      <div class="two">
+        <div class="field"><label for="sTime">Time it took to work</label><input id="sTime" maxlength="40" placeholder="About 2 weeks"></div>
+        <div class="field"><label for="sCost">Cost</label><input id="sCost" maxlength="40" placeholder="$25 or free"></div>
+      </div>
+      <div class="field">
+        <span class="lab" id="sOutLab">Did it work for you?</span>
+        <div class="seg" role="radiogroup" aria-labelledby="sOutLab">
+          <input type="radio" name="sOut" id="sOutW" value="worked" checked><label for="sOutW">Worked</label>
+          <input type="radio" name="sOut" id="sOutP" value="partial"><label for="sOutP">Partly</label>
+        </div>
+        <span class="hint">This counts as the first outcome report on your fix.</span>
+      </div>
+      <div class="actions"><button class="btn primary" type="submit" id="sSubmit">Share fix</button><span class="muted" id="sMsg" style="font-size:.9rem"></span></div>
+    </form>
+  </section>
+
+  <!-- FOLLOWING -->
+  <section class="view" id="v-following" hidden>
+    <div class="sec-h"><h1 style="font-size:2rem">Following</h1><button class="btn sm" type="button" id="markAll" hidden>Mark all as seen</button></div>
+    <div class="list" id="follows"></div>
+  </section>
+</main>
+
+<!-- Report outcome sheet -->
+<div class="sheet-wrap" id="reportWrap" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+    <h2 id="reportTitle">How did it go?</h2>
+    <p class="muted" id="reportFix"></p>
+    <div class="seg" role="radiogroup" aria-label="Outcome">
+      <input type="radio" name="rOut" id="rOutW" value="worked"><label for="rOutW">Worked</label>
+      <input type="radio" name="rOut" id="rOutP" value="partial"><label for="rOutP">Partly</label>
+      <input type="radio" name="rOut" id="rOutF" value="failed"><label for="rOutF">Didn't work</label>
+    </div>
+    <div class="field">
+      <label for="reportNote">Anything others should know? <span class="muted" style="font-weight:400">Optional</span></label>
+      <textarea id="reportNote" maxlength="400" placeholder="Worked after about a week, but only once I also…"></textarea>
+    </div>
+    <div class="actions">
+      <button class="btn ghost danger sm" type="button" id="reportRemove">Remove my report</button>
+      <span class="spacer"></span>
+      <button class="btn ghost" type="button" id="reportCancel">Cancel</button>
+      <button class="btn primary" type="button" id="reportSave">Save outcome</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mark solved sheet -->
+<div class="sheet-wrap" id="solveWrap" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="solveTitle">
+    <h2 id="solveTitle">What solved it?</h2>
+    <p class="muted">Pick the fix that worked. It also records a "worked" outcome from you, which moves it up for the next person.</p>
+    <div class="radios" id="solveList"></div>
+    <div class="actions"><span class="spacer"></span><button class="btn ghost" type="button" id="solveCancel">Cancel</button><button class="btn primary" type="button" id="solveSave">Mark solved</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>window.addEventListener("load",()=>setTimeout(()=>{const u=new URLSearchParams(location.search);if(u.get("q")){const q=document.querySelector("#q");q.value=u.get("q");q.dispatchEvent(new Event("input"));}if(u.get("t")){const t=document.querySelector("#pTitle");t.value=u.get("t");t.dispatchEvent(new Event("input"));}},1600));</script>
+<script>window.WW_DEMO = {"outcomes/example-author-2": {"o": {"ex-s2a": {"at": 1792388358400, "note": "", "r": "worked"}}, "updatedAt": 1793416000000}, "outcomes/example-r1": {"o": {"ex-s1a": {"at": 1792889478400, "note": "", "r": "worked"}, "ex-s1c": {"at": 1793215379200, "note": "He reacts to sound, not sight. No change at all.", "r": "failed"}, "ex-s2a": {"at": 1792165100800, "note": "The clock was the key part for us.", "r": "worked"}, "ex-s3c": {"at": 1793174425600, "note": "", "r": "partial"}, "ex-s4a": {"at": 1793210368000, "note": "", "r": "worked"}}, "updatedAt": 1793416000000}, "outcomes/example-r2": {"o": {"ex-s1a": {"at": 1792775430400, "note": "", "r": "worked"}, "ex-s1c": {"at": 1793122067200, "note": "", "r": "failed"}, "ex-s2a": {"at": 1793281388800, "note": "", "r": "worked"}, "ex-s3a": {"at": 1793061587200, "note": "", "r": "worked"}, "ex-s4b": {"at": 1793090272000, "note": "Slows it down but it comes back.", "r": "partial"}, "ex-s5a": {"at": 1793141593600, "note": "", "r": "worked"}}, "updatedAt": 1793416000000}, "outcomes/example-r3": {"o": {"ex-s1a": {"at": 1792942700800, "note": "", "r": "worked"}, "ex-s1c": {"at": 1793258924800, "note": "", "r": "failed"}, "ex-s2a": {"at": 1792257030400, "note": "", "r": "worked"}, "ex-s3b": {"at": 1793203456000, "note": "", "r": "worked"}, "ex-s4a": {"at": 1793278105600, "note": "", "r": "worked"}, "ex-s5b": {"at": 1793255814400, "note": "", "r": "partial"}}, "updatedAt": 1793416000000}, "outcomes/example-r4": {"o": {"ex-s1a": {"at": 1793109971200, "note": "", "r": "worked"}, "ex-s2a": {"at": 1792060038400, "note": "", "r": "worked"}, "ex-s2b": {"at": 1792637536000, "note": "She still woke at 5, just more tired.", "r": "failed"}, "ex-s3c": {"at": 1793294694400, "note": "", "r": "failed"}, "ex-s5a": {"at": 1793160947200, "note": "Starting tiny is what makes it work.", "r": "worked"}}, "updatedAt": 1793416000000}, "outcomes/example-r5": {"o": {"ex-s1a": {"at": 1792995923200, "note": "Helps a lot, but he still barks at the neighbor's motorcycle.", "r": "partial"}, "ex-s2a": {"at": 1793176326400, "note": "", "r": "worked"}, "ex-s3a": {"at": 1793022880000, "note": "", "r": "worked"}, "ex-s3c": {"at": 1793232486400, "note": "", "r": "worked"}, "ex-s4b": {"at": 1793350854400, "note": "", "r": "partial"}}, "updatedAt": 1793416000000}, "outcomes/example-r6": {"o": {"ex-s1b": {"at": 1792930432000, "note": "", "r": "worked"}, "ex-s1c": {"at": 1793209158400, "note": "", "r": "partial"}, "ex-s2a": {"at": 1792151968000, "note": "", "r": "worked"}, "ex-s3c": {"at": 1793170278400, "note": "Didn't help, the room was just out of range.", "r": "failed"}, "ex-s4a": {"at": 1793200691200, "note": "Our duct was disconnected too. Check it!", "r": "worked"}, "ex-s5b": {"at": 1793239225600, "note": "", "r": "failed"}}, "updatedAt": 1793416000000}, "outcomes/example-r7": {"o": {"ex-s1b": {"at": 1793082496000, "note": "", "r": "worked"}, "ex-s2b": {"at": 1793283808000, "note": "", "r": "partial"}, "ex-s3a": {"at": 1793056748800, "note": "", "r": "worked"}, "ex-s4a": {"at": 1793055539200, "note": "", "r": "partial"}, "ex-s5a": {"at": 1793138828800, "note": "", "r": "partial"}}, "updatedAt": 1793416000000}, "outcomes/example-r8": {"o": {"ex-s1b": {"at": 1792978816000, "note": "", "r": "partial"}, "ex-s2b": {"at": 1793107552000, "note": "", "r": "failed"}, "ex-s3b": {"at": 1793045862400, "note": "", "r": "partial"}, "ex-s4b": {"at": 1792946502400, "note": "", "r": "failed"}, "ex-s5a": {"at": 1793373836800, "note": "", "r": "worked"}}, "updatedAt": 1793416000000}, "problems/ex-dog-bark": {"acceptedSolutionId": null, "authorId": "example-author-1", "createdAt": 1792379200000, "details": "Started when we moved into a ground-floor apartment. Any footsteps or car doors set him off, usually between 11pm and 2am.", "example": true, "status": "open", "tags": ["dogs", "sleep", "apartment"], "title": "My dog barks at every noise outside at night", "tried": "Yelling at him to stop, which made it worse."}, "problems/ex-laptop-slow": {"acceptedSolutionId": null, "authorId": "example-author-6", "createdAt": 1793329600000, "details": "Takes minutes to boot and apps freeze for a few seconds. Started right after the latest update.", "example": true, "status": "open", "tags": ["computer", "windows"], "title": "Windows laptop got really slow after an update", "tried": ""}, "problems/ex-procrastinate": {"acceptedSolutionId": null, "authorId": "example-author-5", "createdAt": 1792984000000, "details": "I know what to do, I just can't make myself begin until the deadline is close.", "example": true, "status": "open", "tags": ["work", "focus"], "title": "I put off starting work tasks until the last minute", "tried": "To-do lists, which I ignore."}, "problems/ex-shower-mold": {"acceptedSolutionId": null, "authorId": "example-author-4", "createdAt": 1792120000000, "details": "Black spots above the shower return a few weeks after cleaning. Small bathroom, no window.", "example": true, "status": "open", "tags": ["home", "cleaning", "mold"], "title": "Mold keeps coming back on the bathroom ceiling", "tried": "Bleach spray every couple of weeks."}, "problems/ex-toddler-5am": {"acceptedSolutionId": "ex-s2a", "authorId": "example-author-2", "createdAt": 1791688000000, "details": "She's 2.5. Goes to bed at 7:30, sleeps through, but is wide awake at 5 no matter what.", "example": true, "solvedAt": 1792724800000, "solvedBy": "example-author-2", "status": "solved", "tags": ["kids", "sleep"], "title": "My toddler wakes up at 5am every morning", "tried": "Keeping her up later."}, "problems/ex-wifi-drop": {"acceptedSolutionId": null, "authorId": "example-author-3", "createdAt": 1792724800000, "details": "The back bedroom loses connection several times an hour. Phone shows one bar. Every other room is fine.", "example": true, "status": "open", "tags": ["wifi", "home"], "title": "Wi-Fi keeps dropping in one room of the house", "tried": "Restarting the router."}, "solutions/ex-s1a": {"authorId": "example-helper-1", "cost": "$30", "createdAt": 1792465600000, "details": "Brown noise setting, medium volume, placed between his bed and the window. He stopped hearing most outside sounds.", "example": true, "problemId": "ex-dog-bark", "summary": "White-noise machine by the window", "time": "3 nights"}, "solutions/ex-s1b": {"authorId": "example-helper-2", "cost": "Free", "createdAt": 1792552000000, "details": "Played door and footstep sounds at low volume while giving treats, raising volume a little each day.", "example": true, "problemId": "ex-dog-bark", "summary": "Desensitize with recorded street sounds and treats", "time": "3 weeks"}, "solutions/ex-s1c": {"authorId": "example-helper-3", "cost": "Free", "createdAt": 1792638400000, "details": "", "example": true, "problemId": "ex-dog-bark", "summary": "Close the blinds so he can't see outside", "time": "Same day"}, "solutions/ex-s2a": {"authorId": "example-helper-4", "cost": "$45", "createdAt": 1791774400000, "details": "Room is fully dark now. The clock turns green at 6:30 and she knows to stay in bed until then.", "example": true, "problemId": "ex-toddler-5am", "summary": "Blackout curtains plus a toddler wake-up clock", "time": "2 weeks"}, "solutions/ex-s2b": {"authorId": "example-helper-5", "cost": "Free", "createdAt": 1791947200000, "details": "", "example": true, "problemId": "ex-toddler-5am", "summary": "Push bedtime an hour later", "time": "1 week"}, "solutions/ex-s3a": {"authorId": "example-helper-6", "cost": "$90", "createdAt": 1792811200000, "details": "Put a mesh satellite halfway between the router and the bedroom. Full signal since.", "example": true, "problemId": "ex-wifi-drop", "summary": "Add a mesh node in the hallway", "time": "Same day"}, "solutions/ex-s3b": {"authorId": "example-helper-7", "cost": "Free", "createdAt": 1792897600000, "details": "Used a Wi-Fi analyzer app, saw neighbors on my channel, switched to the empty one in the router settings.", "example": true, "problemId": "ex-wifi-drop", "summary": "Change the router channel to 1, 6 or 11", "time": "10 minutes"}, "solutions/ex-s3c": {"authorId": "example-helper-8", "cost": "Free", "createdAt": 1792897600000, "details": "", "example": true, "problemId": "ex-wifi-drop", "summary": "Reboot the router on a nightly schedule", "time": "Ongoing"}, "solutions/ex-s4a": {"authorId": "example-helper-9", "cost": "$25", "createdAt": 1792206400000, "details": "Also found the fan duct was disconnected in the attic and reattached it. Put the fan on a countdown timer switch.", "example": true, "problemId": "ex-shower-mold", "summary": "Run the exhaust fan 30 minutes after every shower", "time": "1 month"}, "solutions/ex-s4b": {"authorId": "example-helper-10", "cost": "$3", "createdAt": 1792292800000, "details": "", "example": true, "problemId": "ex-shower-mold", "summary": "Spray vinegar weekly instead of bleach", "time": "Ongoing"}, "solutions/ex-s5a": {"authorId": "example-helper-11", "cost": "Free", "createdAt": 1793070400000, "details": "Write down the first physical action (open the doc, write one sentence) and commit to just that for one timer.", "example": true, "problemId": "ex-procrastinate", "summary": "Set a 25-minute timer and only do the smallest first step", "time": "Same day"}, "solutions/ex-s5b": {"authorId": "example-helper-12", "cost": "Free", "createdAt": 1793156800000, "details": "", "example": true, "problemId": "ex-procrastinate", "summary": "Block distracting websites during work hours", "time": "1 week"}};</script>
+<script>
+(() => {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const k of kids.flat(9)) { if (k == null || k === false) continue; e.append(k.nodeType ? k : String(k)); }
+  return e;
+}
+const rc = (el, ...k) => el.replaceChildren(...k.flat(9).filter(x => x != null && x !== false).map(x => x.nodeType ? x : String(x)));
+const str = (v, max = 4000) => (typeof v === "string" ? v : v == null ? "" : String(v)).slice(0, max);
+const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const OUT = { worked: "Worked", partial: "Partly worked", failed: "Didn't work" };
+
+/* ---------- state ---------- */
+const S = {
+  mode: "live", db: null, user: null, uid: null, canWrite: false,
+  problems: new Map(), solutions: new Map(), outcomes: new Map(), follow: {},
+  loaded: { p: false, s: false, o: false },
+  view: "browse", pid: null, prevView: "browse",
+  query: "", filter: "all", sort: "match", openNotes: new Set(),
+  D: null, idx: null,
+};
+
+/* ---------- search: natural-language matching ---------- */
+const STOP = new Set(("a an and are as at be been being but by can could do does did doing for from get gets getting got had has have " +
+  "how i im ive in into is it its just keep keeps me my of on or our so some still that the their them there this to too up very was what " +
+  "when where which while who why will with wont would you your after before about any all also always because even every ever like make " +
+  "makes need needs no not now off only out over really should since than then they thing things way we were dont doesnt cant isnt wont " +
+  "help fix fixing solve solution problem problems issue issues trouble best good tips anyone anybody someone tried try trying more much " +
+  "lot lots one ones day days time times year years old month months way too").split(" "));
+function stem(w) {
+  if (w.length > 5 && w.endsWith("ing")) w = w.slice(0, -3);
+  else if (w.length > 4 && w.endsWith("ies")) w = w.slice(0, -3) + "y";
+  else if (w.length > 4 && w.endsWith("ed")) w = w.slice(0, -2);
+  else if (w.length > 4 && /(sh|ch|x|ss)es$/.test(w)) w = w.slice(0, -2);
+  else if (w.length > 3 && w.endsWith("s") && !w.endsWith("ss") && !w.endsWith("us")) w = w.slice(0, -1);
+  if (w.length > 3 && /([bdgklmnprt])\1$/.test(w)) w = w.slice(0, -1);
+  return w;
+}
+function toks(text) {
+  return str(text, 6000).toLowerCase().replace(/[’']/g, "").split(/[^a-z0-9]+/)
+    .filter(w => w.length > 1 && !STOP.has(w)).map(stem).filter(w => w.length > 1 && !STOP.has(w));
+}
+const SYN_GROUPS = [
+  "kid child children toddler baby son daughter infant", "sleep insomnia asleep awake nap tired wake", "computer pc laptop desktop",
+  "phone iphone android smartphone mobile cell", "wifi internet router connection network signal", "car vehicle truck auto",
+  "money budget debt bill cash afford expensive cost", "slow lag laggy sluggish freeze frozen", "loud noise noisy sound",
+  "smell odor stink stinky", "dog puppy pup", "cat kitten", "stain spot", "leak drip dripping", "hurt pain ache sore",
+  "anxious anxiety stress stressed worry nervous panic", "job work boss career coworker office", "headache migraine",
+  "mold mildew", "bug insect ant roach cockroach", "mouse mice rat rodent", "battery charge charging", "eat food meal diet",
+  "argue fight conflict", "early morning dawn sunrise 4am 5am 6am", "wake waking woke wakeup", "focus concentrate distracted procrastinate", "cold freezing chilly", "hot heat warm overheat",
+];
+const SYN = new Map();
+for (const g of SYN_GROUPS) { const st = [...new Set(g.split(" ").map(w => stem(w)))]; for (const s of st) SYN.set(s, [...new Set([...(SYN.get(s) || []), ...st.filter(x => x !== s)])]); }
+const syn = t => SYN.get(t) || [];
+const tfScore = x => (x ? x / (x + 1.5) : 0);
+
+function buildIndex() {
+  const docs = [], df = new Map();
+  for (const [pid, p] of S.problems) {
+    const tf = new Map();
+    const add = (text, w) => { for (const t of toks(text)) tf.set(t, (tf.get(t) || 0) + w); };
+    add(p.title, 3); add((Array.isArray(p.tags) ? p.tags : []).join(" "), 2); add(p.details, 1); add(p.tried, 0.6);
+    for (const s of S.D.solsByProb.get(pid) || []) { add(s.summary, 0.8); add(s.details, 0.4); }
+    for (const t of tf.keys()) df.set(t, (df.get(t) || 0) + 1);
+    docs.push({ pid, tf, keys: [...tf.keys()] });
+  }
+  S.idx = { docs, df, N: docs.length };
+}
+function search(q) {
+  const qt = [...new Set(toks(q))];
+  if (!qt.length || !S.idx) return null;
+  const { docs, df, N } = S.idx;
+  const idf = t => Math.log(1 + (N + 1) / ((df.get(t) || 0) + 0.5));
+  const terms = new Set(qt); for (const t of qt) for (const s of syn(t)) terms.add(s);
+  let maxScore = 0; for (const t of qt) maxScore += idf(t);
+  const rel = new Map();
+  for (const d of docs) {
+    let sc = 0;
+    for (const t of qt) {
+      let best = tfScore(d.tf.get(t)) * idf(t);
+      for (const s of syn(t)) best = Math.max(best, tfScore(d.tf.get(s)) * 0.55 * idf(t));
+      if (best === 0 && t.length >= 4) {
+        for (const k of d.keys) if (k.length >= 4 && k !== t && (k.startsWith(t) || t.startsWith(k))) {
+          best = Math.max(best, tfScore(d.tf.get(k)) * 0.6 * idf(t)); terms.add(k);
+        }
+      }
+      sc += best;
+    }
+    const r = Math.min(1, sc / maxScore);
+    if (r > 0.12) rel.set(d.pid, r);
+  }
+  return { rel, terms };
+}
+function highlight(text, terms) {
+  const out = [];
+  for (const part of str(text).split(/([A-Za-z0-9’']+)/)) {
+    if (!part) continue;
+    const t = stem(part.toLowerCase().replace(/[’']/g, ""));
+    if (terms && /[A-Za-z0-9]/.test(part) && !STOP.has(t) && terms.has(t)) out.push(h("mark", null, part)); else out.push(part);
+  }
+  return out;
+}
+
+/* ---------- ranking: outcomes → score ---------- */
+function wilson(succ, n, z = 1.645) {
+  if (!n) return 0;
+  const p = succ / n, z2 = z * z;
+  return (p + z2 / (2 * n) - z * Math.sqrt((p * (1 - p) + z2 / (4 * n)) / n)) / (1 + z2 / n);
+}
+function verdict(st) {
+  if (!st.n) return { k: "untested", t: "No reports yet" };
+  if (st.n >= 3 && st.wilson >= 0.5) return { k: "proven", t: "Proven" };
+  if (st.n >= 3 && st.rate < 0.3) return { k: "rarely", t: "Rarely works" };
+  if (st.rate >= 0.6) return { k: "promising", t: "Promising" };
+  return { k: "mixed", t: "Mixed results" };
+}
+function derive() {
+  const D = { solsByProb: new Map(), stats: new Map(), best: new Map(), reports: 0, proven: 0, solCount: 0 };
+  for (const [sid, s] of S.solutions) {
+    const pid = str(s.problemId, 100);
+    if (!S.problems.has(pid)) continue;
+    if (!D.solsByProb.has(pid)) D.solsByProb.set(pid, []);
+    D.solsByProb.get(pid).push({ ...s, id: sid });
+    D.stats.set(sid, { worked: 0, partial: 0, failed: 0, n: 0, reports: [] });
+    D.solCount++;
+  }
+  for (const [uid, doc] of S.outcomes) {
+    const o = doc && typeof doc.o === "object" && doc.o ? doc.o : {};
+    for (const sid of Object.keys(o)) {
+      const st = D.stats.get(sid), r = o[sid];
+      if (!st || !r || !OUT[r.r]) continue;
+      st[r.r]++; st.n++; D.reports++;
+      st.reports.push({ uid, r: r.r, note: str(r.note, 400), at: +r.at || 0 });
+    }
+  }
+  for (const st of D.stats.values()) {
+    st.succ = st.worked + 0.5 * st.partial;
+    st.rate = st.n ? st.succ / st.n : 0;
+    st.wilson = wilson(st.succ, st.n);
+    st.v = verdict(st);
+    st.reports.sort((a, b) => b.at - a.at);
+    if (st.v.k === "proven") D.proven++;
+  }
+  for (const [pid, list] of D.solsByProb) {
+    list.sort((a, b) => { const A = D.stats.get(a.id), B = D.stats.get(b.id);
+      return B.wilson - A.wilson || B.n - A.n || (+a.createdAt || 0) - (+b.createdAt || 0); });
+    D.best.set(pid, list[0]);
+  }
+  S.D = D;
+  buildIndex();
+}
+function probStatus(pid) {
+  const p = S.problems.get(pid);
+  if (p && p.status === "solved") return { k: "solved", t: "Solved" };
+  const b = S.D.best.get(pid), st = b && S.D.stats.get(b.id);
+  if (st && st.v.k === "proven") return { k: "proven", t: "Proven fix" };
+  if (!b) return { k: "open", t: "No fixes yet" };
+  return { k: "open", t: "Open" };
+}
+function hasWorkingFix(pid) {
+  const p = S.problems.get(pid); if (p && p.status === "solved") return true;
+  return (S.D.solsByProb.get(pid) || []).some(s => { const st = S.D.stats.get(s.id); return st.n && st.worked > 0 && st.rate >= 0.5; });
+}
+
+/* ---------- formatting ---------- */
+function ago(ts) {
+  ts = +ts; if (!ts) return "";
+  const s = Math.max(0, (Date.now() - ts) / 1000);
+  if (s < 60) return "just now";
+  const m = s / 60; if (m < 60) return Math.floor(m) + "m ago";
+  const hr = m / 60; if (hr < 24) return Math.floor(hr) + "h ago";
+  const d = hr / 24; if (d < 30) return Math.floor(d) + "d ago";
+  return new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+const isEx = uid => typeof uid === "string" && uid.startsWith("example-");
+const who = uid => isEx(uid) ? h("span", null, "an example member") : h("span", { "data-uid": str(uid, 200) }, uid && uid === S.uid ? "you" : "a member");
+const exPill = p => p.example === true ? h("span", { class: "pill untested", title: "Sample post showing how What Worked works" }, "Example") : null;
+async function fillNames() {
+  const els = $$("[data-uid]").filter(e => !e.dataset.named);
+  const ids = [...new Set(els.map(e => e.dataset.uid).filter(Boolean))];
+  if (!ids.length || !S.user || typeof S.user.profiles !== "function") return;
+  let ps = {};
+  try { ps = await S.user.profiles(ids); } catch { return; }
+  for (const e of els) {
+    const id = e.dataset.uid; e.dataset.named = "1";
+    e.textContent = id === S.uid ? "you" : (ps[id] && ps[id].name) || "a member";
+  }
+}
+function outcomeBar(st, compact) {
+  const pct = x => (st.n ? (x / st.n) * 100 : 0) + "%";
+  const legend = st.n
+    ? [h("span", null, h("i", { class: "dot", style: "background:var(--ok)" }), h("b", null, st.worked), " worked"),
+       st.partial ? h("span", null, h("i", { class: "dot", style: "background:var(--mid)" }), h("b", null, st.partial), " partly") : null,
+       st.failed ? h("span", null, h("i", { class: "dot", style: "background:var(--bad)" }), h("b", null, st.failed), " didn't") : null,
+       compact ? null : h("span", null, h("b", null, Math.round(st.rate * 100) + "%"), " success from ", h("b", null, st.n), st.n === 1 ? " report" : " reports")]
+    : [h("span", null, "No one has reported trying this yet")];
+  return h("div", { class: "obar" },
+    h("div", { class: "track", role: "img", "aria-label": st.n ? `${st.worked} worked, ${st.partial} partly, ${st.failed} didn't work` : "No outcome reports" },
+      h("i", { class: "w", style: "width:" + pct(st.worked) }), h("i", { class: "p", style: "width:" + pct(st.partial) }), h("i", { class: "f", style: "width:" + pct(st.failed) })),
+    h("div", { class: "legend" }, legend));
+}
+
+/* ---------- navigation ---------- */
+function go(view, pid, opts = {}) {
+  if (view !== S.view || pid !== S.pid) S.prevView = S.view === "problem" ? S.prevView : S.view;
+  S.view = view; S.pid = pid || null;
+  for (const v of ["browse", "post", "problem", "following"]) $("#v-" + v).hidden = v !== view;
+  $$("[data-nav]").forEach(b => b.dataset.nav === view ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
+  const token = view === "problem" ? "p-" + pid : view;
+  try { if (location.hash.slice(1) !== token) history.replaceState(null, "", "#" + token); } catch {}
+  if (view === "problem") { S.openNotes.clear(); $("#solForm").reset(); $("#sMsg").textContent = ""; markSeen(pid); }
+  render();
+  if (!opts.keepScroll) window.scrollTo(0, 0);
+  if (opts.focusSol) setTimeout(() => { const el = document.getElementById("s-" + opts.focusSol); if (el) el.scrollIntoView({ block: "start" }); }, 30);
+}
+function fromHash() {
+  const t = location.hash.slice(1);
+  if (t.startsWith("p-") && t.length > 2) return go("problem", t.slice(2));
+  if (["browse", "post", "following"].includes(t)) return go(t);
+  go("browse");
+}
+
+/* ---------- writes ---------- */
+const queues = {};
+function enqueue(key, fn) { const p = (queues[key] || Promise.resolve()).catch(() => {}).then(fn); queues[key] = p; return p; }
+async function write(key, fn) {
+  if (!S.canWrite) { toast(S.uid ? "You can read here but not post. Ask the owner for Contributor access." : "Sign in to post and report outcomes."); throw new Error("readonly"); }
+  try { return await enqueue(key, fn); }
+  catch (e) {
+    if (e && e.code === "invalid_argument") { S.canWrite = false; toast("That didn't save. Your access here is read-only."); renderBanner(); render(); }
+    else if (e && e.code === "quota_exceeded") toast("The database is full. Delete old posts to make room.");
+    else if (e && e.code === "resource_exhausted") toast("Too many changes at once. Wait a moment and try again.");
+    else toast("Couldn't save right now. Check your connection and try again.");
+    throw e;
+  }
+}
+function setOutcome(sid, r, note) {
+  return write("outcome", () => {
+    const cur = S.outcomes.get(S.uid);
+    const o = JSON.parse(JSON.stringify((cur && cur.o) || {}));
+    if (r) o[sid] = { r, note: str(note, 400), at: Date.now() }; else delete o[sid];
+    return S.db.doc("outcomes/" + S.uid).set({ o, updatedAt: Date.now() });
+  });
+}
+function setFollow(pid, on) {
+  return write("follow", () => {
+    const f = { ...S.follow };
+    if (on) f[pid] = Date.now(); else delete f[pid];
+    return S.db.doc(`data/users/${S.uid}/state`).set({ follow: f });
+  });
+}
+function markSeen(pid) {
+  if (!S.canWrite || !pid || !(pid in S.follow)) return;
+  if (!updatesFor(pid).length) return;
+  setFollow(pid, true).catch(() => {});
+}
+
+/* ---------- updates for followed problems ---------- */
+function updatesFor(pid) {
+  const seen = +S.follow[pid] || 0, p = S.problems.get(pid), out = [];
+  if (!p) return out;
+  if (p.status === "solved" && +p.solvedAt > seen && p.solvedBy !== S.uid) out.push({ at: +p.solvedAt, t: "Marked solved by the poster" });
+  const sols = S.D.solsByProb.get(pid) || [];
+  const newSols = sols.filter(s => +s.createdAt > seen && s.authorId !== S.uid);
+  if (newSols.length) out.push({ at: Math.max(...newSols.map(s => +s.createdAt)), t: newSols.length === 1 ? `New fix: “${str(newSols[0].summary, 80)}”` : `${newSols.length} new fixes` });
+  let reps = 0, last = 0;
+  for (const s of sols) for (const r of S.D.stats.get(s.id).reports) if (r.at > seen && r.uid !== S.uid) { reps++; last = Math.max(last, r.at); }
+  if (reps) out.push({ at: last, t: reps === 1 ? "1 new outcome report" : `${reps} new outcome reports` });
+  return out.sort((a, b) => b.at - a.at);
+}
+
+/* ---------- rendering ---------- */
+let raf = 0;
+function render() { cancelAnimationFrame(raf); raf = requestAnimationFrame(doRender); }
+function doRender() {
+  if (!S.D) derive();
+  renderBadge();
+  if (S.view === "browse") renderBrowse();
+  else if (S.view === "post") renderSimilar();
+  else if (S.view === "problem") renderProblem();
+  else if (S.view === "following") renderFollowing();
+  fillNames();
+}
+function loadingNow() { return !(S.loaded.p && S.loaded.s && S.loaded.o); }
+function renderBadge() {
+  const n = Object.keys(S.follow).filter(pid => updatesFor(pid).length).length;
+  const b = $("#navBadge"); b.hidden = !n; b.textContent = n;
+}
+function renderBanner(kind) {
+  const b = $("#banner");
+  let msg = "";
+  if (S.mode === "local") msg = "Demo copy with the example data. Changes here are not saved.";
+  else if (!S.db) msg = "Sign in to claude.ai to see the problems and fixes people have shared here.";
+  else if (kind === "slow") msg = "Can't reach the shared database yet. What you see may be incomplete; it will fill in once the connection returns.";
+  else if (!S.canWrite) msg = "You're viewing in read-only mode. Ask the owner for Contributor access to post problems, share fixes and report outcomes.";
+  b.textContent = msg; b.hidden = !msg;
+}
+
+function problemCard(pid, terms, rel) {
+  const p = S.problems.get(pid), st = probStatus(pid), best = S.D.best.get(pid);
+  const sols = S.D.solsByProb.get(pid) || [];
+  const tags = (Array.isArray(p.tags) ? p.tags : []).slice(0, 6).map(t => str(t, 30));
+  const bst = best && S.D.stats.get(best.id);
+  return h("button", { class: "pcard", type: "button", onclick: () => go("problem", pid) },
+    h("div", { class: "row1" }, h("h3", null, highlight(str(p.title, 140), terms)), exPill(p), h("span", { class: "pill " + st.k }, st.t)),
+    h("div", { class: "meta" },
+      h("span", null, sols.length ? `${sols.length} ${sols.length === 1 ? "fix" : "fixes"}` : "Waiting for a first fix"),
+      h("span", null, ago(p.createdAt)),
+      rel != null ? h("span", { class: "match" }, Math.round(rel * 100) + "% match") : null,
+      tags.map(t => h("span", { class: "tag", role: "link", tabindex: "-1", onclick: ev => { ev.stopPropagation(); setQuery(t); } }, t))),
+    best ? h("div", { class: "bestfix" },
+      h("span", { class: "lbl" }, p.status === "solved" && p.acceptedSolutionId === best.id ? "Fix that solved it" : "Top-ranked fix"),
+      h("span", { class: "txt" }, str(best.summary, 160)),
+      outcomeBar(bst, true)) : null);
+}
+function setQuery(q) { S.query = q; $("#q").value = q; if (S.view !== "browse") go("browse"); else render(); }
+
+const stat = (n, one, many) => h("span", null, h("b", null, n), " " + (n === 1 ? one : many));
+function renderBrowse() {
+  const D = S.D, q = S.query.trim();
+  rc($("#stats"), 
+    stat(S.problems.size, "problem", "problems"), stat(D.solCount, "fix", "fixes"),
+    stat(D.reports, "outcome report", "outcome reports"), stat(D.proven, "proven fix", "proven fixes"));
+
+  // proven strip (only without a query)
+  const proven = [];
+  for (const [pid, list] of D.solsByProb) for (const s of list) { const st = D.stats.get(s.id); if (st.n >= 2 && st.rate >= 0.6) proven.push({ pid, s, st }); }
+  proven.sort((a, b) => b.st.wilson - a.st.wilson || b.st.n - a.st.n);
+  $("#provenSec").hidden = !!q || !proven.length;
+  rc($("#provenGrid"), ...proven.slice(0, 6).map(({ pid, s, st }) =>
+    h("button", { class: "fcard", type: "button", onclick: () => go("problem", pid, { focusSol: s.id }) },
+      h("div", { class: "rate" }, Math.round(st.rate * 100) + "%", h("small", null, `of ${st.n} people`)),
+      h("div", { class: "sum" }, str(s.summary, 120)),
+      h("div", { class: "for" }, "For: ", str(S.problems.get(pid).title, 120)),
+      outcomeBar(st, true))));
+
+  // problem list
+  const res = q ? search(q) : null;
+  let ids = res ? [...res.rel.keys()] : [...S.problems.keys()];
+  const f = S.filter;
+  ids = ids.filter(pid => f === "all" ? true : f === "proven" ? hasWorkingFix(pid) : f === "unanswered" ? !(D.solsByProb.get(pid) || []).length : S.problems.get(pid).status !== "solved");
+  const provenScore = pid => { const b = D.best.get(pid); return b ? D.stats.get(b.id).wilson + (S.problems.get(pid).status === "solved" ? 0.2 : 0) : 0; };
+  const created = pid => +S.problems.get(pid).createdAt || 0;
+  const sort = S.sort === "match" && !res ? "new" : S.sort;
+  ids.sort((a, b) => sort === "match" ? (res.rel.get(b) * 0.85 + provenScore(b) * 0.15) - (res.rel.get(a) * 0.85 + provenScore(a) * 0.15)
+    : sort === "proven" ? provenScore(b) - provenScore(a) || created(b) - created(a) : created(b) - created(a));
+
+  $("#listTitle").textContent = q ? "Matching problems" : "Problems";
+  $("#listCount").textContent = ids.length ? `${ids.length} ${ids.length === 1 ? "problem" : "problems"}` : "";
+  const box = $("#results");
+  if (loadingNow() && !S.problems.size) { rc(box, h("div", { class: "empty" }, h("p", null, "Loading problems…"))); return; }
+  if (!ids.length) {
+    if (!S.problems.size) {
+      rc(box, h("div", { class: "empty" },
+        h("h3", null, "No problems posted yet"),
+        h("p", null, "This is a database of fixes people have actually tried. Post something that's bugging you, or share a problem you already solved and what did it."),
+        h("button", { class: "btn primary", type: "button", onclick: () => startPost("") }, "Post the first problem")));
+    } else if (q) {
+      rc(box, h("div", { class: "empty" },
+        h("h3", null, "Nobody has posted this yet"),
+        h("p", null, "Try different words, or post it so people who've dealt with it can share what worked."),
+        h("button", { class: "btn primary", type: "button", onclick: () => startPost(q) }, "Post this problem")));
+    } else rc(box, h("div", { class: "empty" }, h("p", null, "No problems match this filter.")));
+    return;
+  }
+  rc(box, ...ids.slice(0, 60).map(pid => problemCard(pid, res && res.terms, res ? res.rel.get(pid) : null)),
+    q ? h("div", { class: "empty", style: "padding:14px 16px" }, h("p", null, "Not quite your situation?"), h("button", { class: "btn sm", type: "button", onclick: () => startPost(q) }, "Post your own problem")) : null);
+}
+
+function startPost(prefill) {
+  $("#postForm").reset(); $("#pMsg").textContent = "";
+  $("#pTitle").value = prefill ? prefill.charAt(0).toUpperCase() + prefill.slice(1) : "";
+  go("post");
+  setTimeout(() => $("#pTitle").focus(), 30);
+}
+function renderSimilar() {
+  const box = $("#similar");
+  const t = $("#pTitle").value.trim(), d = $("#pDetails").value.trim();
+  if (t.length < 4) { rc(box, h("p", { class: "muted", style: "margin:0;font-size:.92rem" }, "Start typing and matches will show up here.")); return; }
+  const res = search(t + " " + t + " " + d.slice(0, 300));
+  const ids = res ? [...res.rel.entries()].filter(([, r]) => r > 0.2).sort((a, b) => b[1] - a[1]).slice(0, 5) : [];
+  if (!ids.length) { rc(box, h("p", { class: "muted", style: "margin:0;font-size:.92rem" }, "No close matches. Looks like a new one.")); return; }
+  rc(box, ...ids.map(([pid, r]) => {
+    const p = S.problems.get(pid), st = probStatus(pid), n = (S.D.solsByProb.get(pid) || []).length;
+    return h("button", { class: "sim", type: "button", onclick: () => go("problem", pid) },
+      h("span", { class: "match" }, Math.round(r * 100) + "% match"),
+      h("b", null, highlight(str(p.title, 140), res.terms)),
+      h("span", { class: "meta" }, h("span", { class: "pill " + st.k }, st.t), h("span", null, n ? `${n} ${n === 1 ? "fix" : "fixes"}` : "no fixes yet")));
+  }));
+}
+
+function renderProblem() {
+  const pid = S.pid, p = S.problems.get(pid), head = $("#pHead"), solsBox = $("#pSols");
+  if (!p) {
+    rc(head, h("div", { class: "empty" }, h("h3", null, loadingNow() ? "Loading…" : "This problem isn't here anymore"),
+      loadingNow() ? null : h("p", null, "It may have been deleted by the person who posted it.")));
+    rc(solsBox, ); $("#solForm").hidden = true; $("#solTitle").parentElement.hidden = true; return;
+  }
+  $("#solTitle").parentElement.hidden = false;
+  const D = S.D, st = probStatus(pid), sols = D.solsByProb.get(pid) || [], mine = p.authorId === S.uid;
+  const following = pid in S.follow, tags = (Array.isArray(p.tags) ? p.tags : []).slice(0, 8).map(t => str(t, 30));
+  const accepted = p.status === "solved" && p.acceptedSolutionId ? sols.findIndex(s => s.id === p.acceptedSolutionId) : -1;
+  const delRow = h("span", { class: "actions", hidden: true },
+    h("span", { class: "muted", style: "font-size:.9rem" }, "Delete this problem and its fixes?"),
+    h("button", { class: "btn sm danger", type: "button", onclick: () => deleteProblem(pid) }, "Delete"),
+    h("button", { class: "btn sm ghost", type: "button", onclick: () => { delRow.hidden = true; } }, "Keep"));
+
+  rc(head, 
+    h("div", { class: "meta" }, exPill(p), h("span", { class: "pill " + st.k }, st.t), h("span", null, "Asked by ", who(p.authorId), " · ", ago(p.createdAt)),
+      tags.map(t => h("button", { class: "tag", type: "button", onclick: () => setQuery(t) }, t))),
+    h("h1", null, str(p.title, 140)),
+    p.details ? h("p", { class: "body" }, str(p.details, 2000)) : null,
+    p.tried ? h("div", { class: "tried" }, h("span", { class: "lab" }, "Already tried"), h("p", null, str(p.tried, 1000))) : null,
+    p.status === "solved" ? h("div", { class: "solvedbar" },
+      h("span", null, "✓ Solved."),
+      accepted >= 0 ? h("span", null, "The poster says ", h("button", { type: "button", onclick: () => document.getElementById("s-" + p.acceptedSolutionId)?.scrollIntoView({ block: "start" }) }, `fix #${accepted + 1}`), " did it.")
+        : h("span", null, "The poster fixed it another way."),
+      h("span", { class: "muted", style: "font-weight:400;color:inherit;opacity:.85" }, ago(p.solvedAt))) : null,
+    h("div", { class: "actions" },
+      h("button", { class: "btn sm" + (following ? " on" : ""), type: "button", "aria-pressed": String(following), disabled: !S.canWrite || null,
+        onclick: () => setFollow(pid, !following).then(() => toast(following ? "Unfollowed" : "Following. New fixes and outcomes show up in Following.")).catch(() => {}) },
+        following ? "✓ Following" : "Follow for updates"),
+      mine && p.status !== "solved" ? h("button", { class: "btn sm", type: "button", disabled: !S.canWrite || null, onclick: () => openSolve(pid) }, "Mark solved") : null,
+      mine && p.status === "solved" ? h("button", { class: "btn sm", type: "button", disabled: !S.canWrite || null, onclick: () => reopen(pid) }, "Reopen") : null,
+      h("span", { class: "spacer" }),
+      mine ? h("button", { class: "btn sm ghost danger", type: "button", disabled: !S.canWrite || null, onclick: () => { delRow.hidden = false; } }, "Delete") : null),
+    delRow);
+
+  $("#solTitle").textContent = sols.length ? `${sols.length} ${sols.length === 1 ? "fix" : "fixes"}` : "Fixes";
+  const myO = (S.outcomes.get(S.uid) || {}).o || {};
+  if (!sols.length) {
+    rc(solsBox, h("div", { class: "empty" }, h("h3", null, "No fixes yet"),
+      h("p", null, mine ? "Follow along: you'll see new fixes in Following as people share them." : "Dealt with this before? Share what you did below. Even a partial fix helps.")));
+  } else {
+    rc(solsBox, ...sols.map((s, i) => {
+      const sst = D.stats.get(s.id), my = myO[s.id], isMine = s.authorId === S.uid;
+      const withNotes = sst.reports.filter(r => r.note), open = S.openNotes.has(s.id);
+      const shown = open ? withNotes : withNotes.slice(0, 2);
+      const del = h("span", { class: "actions", hidden: true },
+        h("span", { class: "muted", style: "font-size:.88rem" }, "Delete your fix?"),
+        h("button", { class: "btn sm danger", type: "button", onclick: () => deleteSolution(s.id) }, "Delete"),
+        h("button", { class: "btn sm ghost", type: "button", onclick: () => { del.hidden = true; } }, "Keep"));
+      const btn = (r, label) => h("button", { class: "btn sm" + (my && my.r === r ? " mine-" + r : ""), type: "button", disabled: !S.canWrite || null,
+        "aria-pressed": String(!!(my && my.r === r)), onclick: () => openReport(s, r) }, label);
+      return h("article", { class: "scard" + (p.acceptedSolutionId === s.id && p.status === "solved" ? " accepted" : ""), id: "s-" + s.id },
+        h("div", { class: "rank", "aria-label": "Rank " + (i + 1) }, "#" + (i + 1)),
+        h("div", { class: "main" },
+          h("div", { class: "hd" }, h("h3", null, str(s.summary, 160)),
+            p.acceptedSolutionId === s.id && p.status === "solved" ? h("span", { class: "pill solved" }, "Solved it") : null,
+            h("span", { class: "pill " + sst.v.k }, sst.v.t)),
+          s.details ? h("p", { class: "body" }, str(s.details, 2000)) : null,
+          (s.time || s.cost) ? h("div", { class: "facts" },
+            s.time ? h("span", { class: "fact" }, "Took ", h("b", null, str(s.time, 40))) : null,
+            s.cost ? h("span", { class: "fact" }, "Cost ", h("b", null, str(s.cost, 40))) : null) : null,
+          outcomeBar(sst),
+          shown.length ? h("div", { class: "notes" }, shown.map(r => h("div", { class: "note " + r.r },
+            h("div", { class: "meta" }, h("b", { style: "color:var(--ink)" }, OUT[r.r]), " · ", who(r.uid), " · ", ago(r.at)),
+            h("p", null, r.note)))) : null,
+          withNotes.length > 2 ? h("button", { class: "linkbtn", type: "button", onclick: () => { open ? S.openNotes.delete(s.id) : S.openNotes.add(s.id); render(); } },
+            open ? "Show fewer notes" : `Show all ${withNotes.length} notes`) : null,
+          h("div", { class: "meta" }, h("span", null, "Shared by ", who(s.authorId), " · ", ago(s.createdAt)),
+            isMine ? h("button", { class: "linkbtn", type: "button", style: "color:var(--bad);font-weight:400", onclick: () => { del.hidden = false; } }, "Delete") : null),
+          del,
+          h("div", { class: "report" }, h("span", { class: "q" }, my ? "Your report:" : "Tried this?"),
+            btn("worked", "Worked"), btn("partial", "Partly"), btn("failed", "Didn't work"))));
+    }));
+  }
+  $("#solForm").hidden = false;
+  for (const el of $$("#solForm input, #solForm textarea, #solForm button")) el.disabled = !S.canWrite;
+}
+
+function renderFollowing() {
+  const box = $("#follows");
+  const ids = Object.keys(S.follow).filter(pid => S.problems.has(pid));
+  const withUpd = ids.map(pid => ({ pid, u: updatesFor(pid) }));
+  $("#markAll").hidden = !withUpd.some(x => x.u.length);
+  if (!S.uid) { rc(box, h("div", { class: "empty" }, h("p", null, "Sign in to follow problems and get their updates here."))); return; }
+  if (!ids.length) {
+    rc(box, h("div", { class: "empty" }, h("h3", null, "You're not following anything yet"),
+      h("p", null, "Problems you post are followed automatically. On any problem, choose Follow for updates to see new fixes, outcome reports and when it's solved."),
+      h("button", { class: "btn", type: "button", onclick: () => go("browse") }, "Find a problem")));
+    return;
+  }
+  withUpd.sort((a, b) => (b.u[0]?.at || 0) - (a.u[0]?.at || 0) || (+S.follow[b.pid]) - (+S.follow[a.pid]));
+  rc(box, ...withUpd.map(({ pid, u }) => {
+    const p = S.problems.get(pid), st = probStatus(pid), best = S.D.best.get(pid);
+    return h("button", { class: "pcard upd", type: "button", onclick: () => go("problem", pid) },
+      h("div", { class: "row1" }, h("h3", null, str(p.title, 140)), h("span", { class: "pill " + st.k }, st.t)),
+      u.length ? h("div", { class: "lines" }, u.map(x => h("span", null, x.t, h("span", { class: "muted" }, " · " + ago(x.at)))))
+        : h("div", { class: "meta" }, "No new activity since you last looked"),
+      best ? h("div", { class: "bestfix" }, h("span", { class: "lbl" }, "Top-ranked fix"), h("span", { class: "txt" }, str(best.summary, 160)), outcomeBar(S.D.stats.get(best.id), true)) : null);
+  }));
+}
+
+/* ---------- sheets ---------- */
+let reportFor = null;
+function openReport(s, r) {
+  if (!S.canWrite) return write("x", () => {}).catch(() => {});
+  reportFor = s.id;
+  const my = ((S.outcomes.get(S.uid) || {}).o || {})[s.id];
+  $("#reportFix").textContent = "“" + str(s.summary, 160) + "”";
+  $$('input[name="rOut"]').forEach(i => { i.checked = i.value === r; });
+  $("#reportNote").value = my && my.r === r ? my.note || "" : my ? my.note || "" : "";
+  $("#reportRemove").hidden = !my;
+  $("#reportWrap").hidden = false;
+  setTimeout(() => $("#reportNote").focus(), 30);
+}
+function closeSheets() { $("#reportWrap").hidden = true; $("#solveWrap").hidden = true; reportFor = null; }
+$("#reportCancel").addEventListener("click", closeSheets);
+$("#reportSave").addEventListener("click", async () => {
+  const r = ($('input[name="rOut"]:checked') || {}).value;
+  if (!r || !reportFor) return;
+  const sid = reportFor, note = $("#reportNote").value.trim();
+  closeSheets();
+  try { await setOutcome(sid, r, note); toast("Outcome saved. Thanks, this is what ranks the fixes."); } catch {}
+});
+$("#reportRemove").addEventListener("click", async () => {
+  const sid = reportFor; closeSheets();
+  try { await setOutcome(sid, null); toast("Report removed"); } catch {}
+});
+let solveFor = null;
+function openSolve(pid) {
+  solveFor = pid;
+  const sols = S.D.solsByProb.get(pid) || [];
+  const list = $("#solveList");
+  rc(list, 
+    ...sols.map((s, i) => h("label", null, h("input", { type: "radio", name: "solveOpt", value: s.id, checked: i === 0 || null }), h("span", null, h("b", null, `#${i + 1} `), str(s.summary, 160)))),
+    h("label", null, h("input", { type: "radio", name: "solveOpt", value: "", checked: !sols.length || null }), h("span", null, "Something else fixed it")));
+  $("#solveWrap").hidden = false;
+}
+$("#solveCancel").addEventListener("click", closeSheets);
+$("#solveSave").addEventListener("click", async () => {
+  const pid = solveFor, sid = ($('input[name="solveOpt"]:checked') || {}).value || "";
+  closeSheets();
+  try {
+    await write("p-" + pid, () => S.db.doc("problems/" + pid).update({ status: "solved", acceptedSolutionId: sid || null, solvedAt: Date.now(), solvedBy: S.uid }));
+    if (sid) await setOutcome(sid, "worked", ((S.outcomes.get(S.uid) || {}).o || {})[sid]?.note || "");
+    toast("Marked solved. Your outcome now helps the next person.");
+  } catch {}
+});
+for (const w of ["#reportWrap", "#solveWrap"]) $(w).addEventListener("click", e => { if (e.target === e.currentTarget) closeSheets(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheets(); });
+
+async function reopen(pid) {
+  try { await write("p-" + pid, () => S.db.doc("problems/" + pid).update({ status: "open", acceptedSolutionId: null })); toast("Reopened"); } catch {}
+}
+async function deleteSolution(sid) {
+  try { await write("s-" + sid, () => S.db.doc("solutions/" + sid).delete()); toast("Fix deleted"); } catch {}
+}
+async function deleteProblem(pid) {
+  try {
+    const sols = S.D.solsByProb.get(pid) || [];
+    for (const s of sols) await write("s-" + s.id, () => S.db.doc("solutions/" + s.id).delete());
+    await write("p-" + pid, () => S.db.doc("problems/" + pid).delete());
+    if (pid in S.follow) await setFollow(pid, false).catch(() => {});
+    toast("Problem deleted"); go("browse");
+  } catch {}
+}
+
+let toastT = 0;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3200); }
+
+/* ---------- static wiring ---------- */
+$("#brand").addEventListener("click", () => go("browse"));
+$$("[data-nav]").forEach(b => b.addEventListener("click", () => b.dataset.nav === "post" ? startPost("") : go(b.dataset.nav)));
+$("#backBtn").addEventListener("click", () => go(S.prevView === "problem" ? "browse" : S.prevView || "browse"));
+let qT = 0;
+$("#q").addEventListener("input", e => { clearTimeout(qT); qT = setTimeout(() => { S.query = e.target.value; if (S.query.trim() && S.sort !== "match") { /* keep user's sort */ } render(); }, 120); });
+$$("[data-filter]").forEach(b => b.addEventListener("click", () => {
+  S.filter = b.dataset.filter; $$("[data-filter]").forEach(x => x.setAttribute("aria-pressed", String(x === b))); render();
+}));
+$("#sort").addEventListener("change", e => { S.sort = e.target.value; render(); });
+let simT = 0;
+for (const id of ["#pTitle", "#pDetails"]) $(id).addEventListener("input", () => { clearTimeout(simT); simT = setTimeout(renderSimilar, 180); });
+$("#markAll").addEventListener("click", () => {
+  if (!S.canWrite) return;
+  write("follow", () => { const f = {}; for (const k of Object.keys(S.follow)) f[k] = Date.now(); return S.db.doc(`data/users/${S.uid}/state`).set({ follow: f }); })
+    .then(() => toast("All caught up")).catch(() => {});
+});
+
+$("#postForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const title = $("#pTitle").value.trim();
+  if (title.length < 8) { $("#pMsg").textContent = "Add a bit more to the problem sentence (at least 8 characters)."; $("#pTitle").focus(); return; }
+  const tags = [...new Set($("#pTags").value.split(",").map(t => t.trim().toLowerCase()).filter(Boolean))].slice(0, 8).map(t => t.slice(0, 30));
+  const id = newId(), now = Date.now();
+  $("#pSubmit").disabled = true; $("#pMsg").textContent = "Posting…";
+  try {
+    await write("p-" + id, () => S.db.doc("problems/" + id).set({
+      title: title.slice(0, 140), details: $("#pDetails").value.trim().slice(0, 2000), tried: $("#pTried").value.trim().slice(0, 1000),
+      tags, authorId: S.uid, createdAt: now, status: "open", acceptedSolutionId: null }));
+    await setFollow(id, true).catch(() => {});
+    $("#postForm").reset(); toast("Posted. You're following it, so new fixes show up in Following.");
+    go("problem", id);
+  } catch { $("#pMsg").textContent = ""; }
+  finally { $("#pSubmit").disabled = false; }
+});
+$("#solForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const summary = $("#sSummary").value.trim();
+  if (summary.length < 4) { $("#sMsg").textContent = "Say in a few words what you did."; $("#sSummary").focus(); return; }
+  const pid = S.pid, sid = newId(), r = ($('input[name="sOut"]:checked') || {}).value || "worked";
+  $("#sSubmit").disabled = true; $("#sMsg").textContent = "Sharing…";
+  try {
+    await write("s-" + sid, () => S.db.doc("solutions/" + sid).set({
+      problemId: pid, summary: summary.slice(0, 160), details: $("#sDetails").value.trim().slice(0, 2000),
+      time: $("#sTime").value.trim().slice(0, 40), cost: $("#sCost").value.trim().slice(0, 40), authorId: S.uid, createdAt: Date.now() }));
+    await setOutcome(sid, r, "").catch(() => {});
+    if (!(pid in S.follow)) await setFollow(pid, true).catch(() => {});
+    $("#solForm").reset(); $("#sMsg").textContent = ""; toast("Fix shared. It climbs as others report it worked.");
+    setTimeout(() => document.getElementById("s-" + sid)?.scrollIntoView({ block: "start" }), 80);
+  } catch { $("#sMsg").textContent = ""; }
+  finally { $("#sSubmit").disabled = !S.canWrite; }
+});
+window.addEventListener("hashchange", () => { const t = location.hash.slice(1); const cur = S.view === "problem" ? "p-" + S.pid : S.view; if (t && t !== cur) fromHash(); });
+
+/* ---------- local preview store (when not running inside claude.ai) ---------- */
+function localStore() {
+  const KEY = "what-worked-local";
+  let data = JSON.parse(JSON.stringify(window.WW_DEMO || {}));
+  const subs = new Set();
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch {} };
+  const snapDoc = path => ({ id: path.split("/").pop(), exists: path in data, data: () => data[path], metadata: { fromCache: false, hasPendingWrites: false } });
+  const notify = () => setTimeout(() => subs.forEach(f => f()), 0);
+  const parentOf = p => p.split("/").slice(0, -1).join("/");
+  const docRef = path => ({
+    path, id: path.split("/").pop(),
+    get: async () => snapDoc(path),
+    set: async d => { data[path] = JSON.parse(JSON.stringify(d)); save(); notify(); },
+    update: async d => { if (!(path in data)) throw { code: "invalid_argument" }; data[path] = { ...data[path], ...JSON.parse(JSON.stringify(d)) }; save(); notify(); },
+    delete: async () => { delete data[path]; save(); notify(); },
+    onSnapshot: next => { const f = () => next(snapDoc(path)); subs.add(f); setTimeout(f, 0); return () => subs.delete(f); },
+  });
+  const db = {
+    doc: docRef,
+    collection: path => ({
+      path, doc: id => docRef(path + "/" + (id || newId())),
+      onSnapshot: next => {
+        const f = () => { const docs = Object.keys(data).filter(k => parentOf(k) === path).map(snapDoc); next({ docs, size: docs.length, empty: !docs.length, metadata: { fromCache: false }, docChanges: () => [] }); };
+        subs.add(f); setTimeout(f, 0); return () => subs.delete(f);
+      },
+    }),
+  };
+  const user = { id: async () => "local-you", can: async () => true, profiles: async ids => Object.fromEntries([].concat(ids).map(i => [i, { id: i, name: "" }])) };
+  return { db, user };
+}
+
+/* ---------- boot ---------- */
+async function getClaude() {
+  if (window.claude && typeof window.claude.use === "function") return window.claude;
+  await new Promise(r => setTimeout(r, 1200));
+  return window.claude && typeof window.claude.use === "function" ? window.claude : null;
+}
+async function boot() {
+  derive(); fromHash();
+  const api = await getClaude();
+  if (api) {
+    S.mode = "live";
+    [S.db, S.user] = await Promise.all([api.use("db"), api.use("user")]);
+  } else {
+    S.mode = "local";
+    const m = localStore(); S.db = m.db; S.user = m.user;
+  }
+  if (S.user) {
+    try { S.uid = await S.user.id(); } catch { S.uid = null; }
+    let can = null; try { can = await S.user.can("data.write"); } catch {}
+    S.canWrite = !!(S.db && S.uid) && can !== false;
+  }
+  renderBanner();
+  if (!S.db) { S.loaded = { p: true, s: true, o: true }; render(); return; }
+
+  const slow = setTimeout(() => { if (loadingNow()) renderBanner("slow"); }, 10000);
+  const done = () => { if (!loadingNow()) { clearTimeout(slow); renderBanner(); } };
+  const onErr = key => e => { S.loaded[key] = true; if (e && e.code === "revoked") { S.canWrite = false; } renderBanner(e && e.code === "unavailable" ? "slow" : undefined); render(); };
+  const toMap = snap => new Map(snap.docs.filter(d => d.exists !== false).map(d => [d.id, d.data() || {}]));
+  const sub = (coll, key, field) => S.db.collection(coll).onSnapshot(snap => {
+    S[field] = toMap(snap);
+    if (!snap.metadata || !snap.metadata.fromCache) S.loaded[key] = true;
+    derive(); render(); done();
+  }, onErr(key));
+  sub("problems", "p", "problems");
+  sub("solutions", "s", "solutions");
+  sub("outcomes", "o", "outcomes");
+  if (S.uid) {
+    S.db.doc(`data/users/${S.uid}/state`).onSnapshot(d => {
+      const f = d.exists && d.data() && d.data().follow;
+      S.follow = f && typeof f === "object" ? { ...f } : {};
+      render();
+    }, () => {});
+  }
+}
+boot();
+})();
+</script>
